@@ -25,6 +25,26 @@ import LoadingDots from "./utils/LoadingDots";
 import getAddressFromCoords from "./utils/getAddressFromCoords";
 
 class App extends React.Component {
+
+  render() {
+    return (
+      <GeoPosition>
+        {x => {
+          return (
+          <dl>
+            <dt>Latitude</dt>
+            <dd>{x.coords.latitude || <LoadingDots />}</dd>
+            <dt>Longitude</dt>
+            <dd>{x.coords.longitude || <LoadingDots />}</dd>
+          </dl>);
+        }}
+      </GeoPosition>
+    );
+  }
+}
+
+class GeoPosition extends React.Component {
+
   state = {
     coords: {
       latitude: null,
@@ -53,21 +73,16 @@ class App extends React.Component {
     navigator.geolocation.clearWatch(this.geoId);
   }
 
-  render() {
+  render(){
     return (
       <div>
-        <h1>Geolocation</h1>
-        {this.state.error ? (
-          <div>Error: {this.state.error.message}</div>
-        ) : (
-          <dl>
-            <dt>Latitude</dt>
-            <dd>{this.state.coords.latitude || <LoadingDots />}</dd>
-            <dt>Longitude</dt>
-            <dd>{this.state.coords.longitude || <LoadingDots />}</dd>
-          </dl>
-        )}
-      </div>
+      <h1>Geolocation</h1>
+      {this.state.error ? (
+        <div>Error: {this.state.error.message}</div>
+      ) : (
+        this.props.children(this.state)
+      )}
+    </div>
     );
   }
 }

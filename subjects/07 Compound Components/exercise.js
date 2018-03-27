@@ -32,8 +32,19 @@ class RadioGroup extends React.Component {
     defaultValue: PropTypes.string
   };
 
+  selectValue = () => {
+    this.props.setActiveIndex(index);
+  }
+
   render() {
-    return <div>{this.props.children}</div>;
+    const children = React.Children.map(this.props.children, child =>
+      React.cloneElement(child, {
+        isSelected: child.props.value === this.props.activeIndex,
+        onClick: () => this.selectValue(child.props.value)
+      })
+    );
+
+    return <div>{children}</div>;
   }
 }
 
@@ -44,8 +55,8 @@ class RadioOption extends React.Component {
 
   render() {
     return (
-      <div>
-        <RadioIcon isSelected={false} /> {this.props.children}
+      <div onClick={this.props.onClick}>
+        <RadioIcon isSelected={this.props.isActive} />
       </div>
     );
   }
@@ -57,17 +68,18 @@ class RadioIcon extends React.Component {
   };
 
   render() {
+    const { isSelected } = this.props;
     return (
       <div
         style={{
           borderColor: "#ccc",
           borderWidth: 3,
-          borderStyle: this.props.isSelected ? "inset" : "outset",
+          borderStyle: isSelected ? "inset" : "outset",
           height: 16,
           width: 16,
           display: "inline-block",
           cursor: "pointer",
-          background: this.props.isSelected ? "rgba(0, 0, 0, 0.05)" : ""
+          background: isSelected ? "rgba(0, 0, 0, 0.05)" : ""
         }}
       />
     );
@@ -75,12 +87,25 @@ class RadioIcon extends React.Component {
 }
 
 class App extends React.Component {
+
+  state = {
+    activeIndex: 0
+  }
+
+  setActiveIndex = (activeIndex) => {
+    this.setState({ activeIndex })
+  }
+
   render() {
     return (
       <div>
-        <h1>♬ It's about time that we all turned off the radio ♫</h1>
+        <h1>`♬ It's about time that we all turned off the radio ${this.state}♫`</h1>
 
-        <RadioGroup defaultValue="fm">
+        <RadioGroup 
+          defaultValue="fm" 
+          activeIndex={this.state.activeIndex} 
+          setActiveIndex={this.setActiveIndex}
+        >
           <RadioOption value="am">AM</RadioOption>
           <RadioOption value="fm">FM</RadioOption>
           <RadioOption value="tape">Tape</RadioOption>

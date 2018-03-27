@@ -14,8 +14,61 @@ import React from "react";
 import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 
-function withMouse(Component) {
-  return Component;
+function withCat(component) {
+  return class extends React.Component {
+
+    state = {
+      mouse: {
+        x: 0,
+        y: 0
+      }
+    }
+
+    componentDidUpdate(){
+      const { mouse } = this.props;
+
+      setTimeout(function (){
+        this.setState({ mouse })
+      }, 200)
+    }
+
+    render(){
+
+      const { mouse } = this.state;
+      return (
+      <div>
+        <component {...this.props}/>
+        <div className="cat" style={{ top: mouse.y, left: mouse.x}}/>
+      </div>);
+    }
+  }
+}
+
+function withMouse(Component, props) {
+  return class extends React.Component {
+    state = {
+      mouse: {
+        x: 0,
+        y: 0
+      }
+    }
+
+    handleMouseMove = (event) => {
+      this.setState({
+        mouse: {
+          x: event.clientX,
+          y: event.clientY
+        }
+      })
+    }
+
+    render(){
+    return (
+    <div className='wrapper' onMouseMove={this.handleMouseMove}>
+      <Component mouse={this.state.mouse} />
+    </div>);
+    }
+  };
 }
 
 class App extends React.Component {
@@ -43,6 +96,8 @@ class App extends React.Component {
   }
 }
 
-const AppWithMouse = withMouse(App);
+const AppWithMouse = withMouse(withCat(App), { mouse: { x: 5, y: 10 } });
 
-ReactDOM.render(<AppWithMouse />, document.getElementById("app"));
+
+
+ReactDOM.render(<AppWithMouse/>, document.getElementById("app"));

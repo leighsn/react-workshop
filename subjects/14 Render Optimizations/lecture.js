@@ -97,8 +97,14 @@ class TodoList extends React.Component {
 
     event.target.reset();
 
+    Perf.start()
+
     this.setState({
-      items: [item].concat(this.state.items)
+      items: [item].concat(this.state.items),
+    },
+    () => {
+      Perf.stop();
+      Perf.printWasted();
     });
   };
 
@@ -119,7 +125,7 @@ class TodoList extends React.Component {
 }
 
 ReactDOM.render(
-  <TodoList startLength={200} />,
+  <TodoList startLength={10000} />,
   document.getElementById("app")
 );
 

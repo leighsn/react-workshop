@@ -19,21 +19,66 @@ history.push('/something')
 class Router extends React.Component {
   history = createHashHistory();
 
+  static childContextTypes = {
+    location: PropTypes.object,
+    updateRoute: PropTypes.func
+  }
+
+  state = {
+    location: this.history.location
+  }
+
+  componentDidMount(){
+    this.history.listen(()=> {
+      this.setState({ location: this.history.location })
+    })
+  }
+
+  getChildContext = () => {
+    return ({
+      location: this.state.location,
+      updateRoute: this.updateRoute
+    })
+  }
+
+  updateRoute = (route) => {
+    debugger
+    this.history.push(route);
+  }
+
   render() {
     return this.props.children;
   }
 }
 
 class Route extends React.Component {
+
+  static contextTypes = {
+    location: PropTypes.object,
+    updateRoute: PropTypes.func
+  }
+
   render() {
+    const { location } = this.context;
     const { path, render, component: Component } = this.props;
-    return null;
+    if (location.pathname === path) {
+      return <Component />;
+    } else {
+      return null;
+    }
   }
 }
 
 class Link extends React.Component {
+
+  static contextTypes = {
+    location: PropTypes.object,
+    updateRoute: PropTypes.func
+  }
+
   handleClick = e => {
     e.preventDefault();
+    this.context.updateRoute(e.target.hash);
   };
 
   render() {

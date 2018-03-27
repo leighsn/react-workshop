@@ -30,80 +30,80 @@ const getHeaderStyle = y => {
   };
 };
 
-class App extends React.Component {
-  state = { y: 0 };
+// class App extends React.Component {
+//   state = { y: 0 };
 
-  handleWindowScroll = () => {
-    this.setState({ y: window.scrollY });
-  };
+//   handleWindowScroll = () => {
+//     this.setState({ y: window.scrollY });
+//   };
 
-  componentDidMount() {
-    this.handleWindowScroll();
-    window.addEventListener("scroll", this.handleWindowScroll);
-  }
+//   componentDidMount() {
+//     this.handleWindowScroll();
+//     window.addEventListener("scroll", this.handleWindowScroll);
+//   }
 
-  componentWillUnmount() {
-    window.removeEventListener("scroll", this.handleWindowScroll);
-  }
+//   componentWillUnmount() {
+//     window.removeEventListener("scroll", this.handleWindowScroll);
+//   }
 
-  render() {
-    const { y } = this.state;
+//   render() {
+//     const { y } = this.state;
 
-    return (
-      <div style={{ height: "300vh", color: "white" }}>
-        <h1 style={getHeaderStyle(y)}>Scroll down!</h1>
-      </div>
-    );
-  }
-}
+//     return (
+//       <div style={{ height: "300vh", color: "white" }}>
+//         <h1 style={getHeaderStyle(y)}>Scroll down!</h1>
+//       </div>
+//     );
+//   }
+// }
 
-ReactDOM.render(<App />, document.getElementById("app"));
+// ReactDOM.render(<App />, document.getElementById("app"));
 
 ///////////////////////////////////////////////////////////////////////////////
 // We can wrap up the scroll listening into a <ScrollPosition> component with
 // a "render" prop. This makes it easier to read our render method and also
 // encapsulates the scroll listening behavior so we can use it elsewhere
 
-//class ScrollPosition extends React.Component {
-//  static propTypes = {
-//    render: PropTypes.func.isRequired
-//  }
-//
-//  state = { y: 0 }
-//
-//  handleWindowScroll = () => {
-//    this.setState({ y: window.scrollY })
-//  }
-//
-//  componentDidMount() {
-//    this.handleWindowScroll()
-//    window.addEventListener('scroll', this.handleWindowScroll)
-//  }
-//
-//  componentWillUnmount() {
-//    window.removeEventListener('scroll', this.handleWindowScroll)
-//  }
-//
-//  render() {
-//    return this.props.render(this.state.y)
-//  }
-//}
-//
-//class App extends React.Component {
-//  render() {
-//    return (
-//      <div style={{ height: '300vh', color: 'white' }}>
-//        <ScrollPosition render={y => (
-//          <h1 style={getHeaderStyle(y)}>
-//            Scroll down!
-//          </h1>
-//        )}/>
-//      </div>
-//    )
-//  }
-//}
-//
-//ReactDOM.render(<App/>, document.getElementById('app'))
+class ScrollPosition extends React.Component {
+ static propTypes = {
+   render: PropTypes.func.isRequired
+ }
+
+ state = { y: 0 }
+
+ handleWindowScroll = () => {
+   this.setState({ y: window.scrollY })
+ }
+
+ componentDidMount() {
+   this.handleWindowScroll()
+   window.addEventListener('scroll', this.handleWindowScroll)
+ }
+
+ componentWillUnmount() {
+   window.removeEventListener('scroll', this.handleWindowScroll)
+ }
+
+ render() {
+   return this.props.render(this.state.y)
+ }
+}
+
+class App extends React.Component {
+ render() {
+   return (
+     <div style={{ height: '300vh', color: 'white' }}>
+       <ScrollPosition render={y => (
+         <h1 style={getHeaderStyle(y)}>
+           Scroll down!
+         </h1>
+       )}/>
+     </div>
+   )
+ }
+}
+
+ReactDOM.render(<App/>, document.getElementById('app'))
 
 ///////////////////////////////////////////////////////////////////////////////
 // A common technique when using "render props" is to just use the "children"

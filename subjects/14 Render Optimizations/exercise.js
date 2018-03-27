@@ -24,6 +24,14 @@ class ListView extends React.Component {
     renderRowAtIndex: PropTypes.func.isRequired
   };
 
+  componentDidMount(){
+    window.addEventListener('scroll', this.handleScroll)
+  }
+
+  handleScroll = () => {
+    debugger
+  }
+
   render() {
     const { numRows, rowHeight, renderRowAtIndex } = this.props;
     const totalHeight = numRows * rowHeight;

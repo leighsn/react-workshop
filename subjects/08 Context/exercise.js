@@ -20,21 +20,47 @@ import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 
 class Form extends React.Component {
+
+  static childContextTypes = {
+    handleSubmit: PropTypes.func
+  }
+
+  getChildContext(){
+    return { handleSubmit: this.props.handleSubmit }
+  }
+
   render() {
     return <div>{this.props.children}</div>;
   }
 }
 
 class SubmitButton extends React.Component {
+
+  static contextTypes = {
+    handleSubmit: PropTypes.func
+  }
+
   render() {
-    return <button>{this.props.children}</button>;
+    return <button onClick={this.context.handleSubmit}>{this.props.children}</button>;
   }
 }
 
 class TextInput extends React.Component {
+
+  static contextTypes = {
+    handleSubmit: PropTypes.func
+  }
+
+  handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      this.context.handleSubmit()
+    } 
+  }
+
   render() {
     return (
       <input
+        onKeyDown={this.handleKeyPress}
         type="text"
         name={this.props.name}
         placeholder={this.props.placeholder}
@@ -44,8 +70,8 @@ class TextInput extends React.Component {
 }
 
 class App extends React.Component {
-  handleSubmit = () => {
-    alert("YOU WIN!");
+  handleSubmit = ({ firstName, lastName }) => {
+    alert(`YOU WIN, ${firstName} ${lastName}!`);
   };
 
   render() {
@@ -55,7 +81,7 @@ class App extends React.Component {
           This isn't even my final <code>&lt;Form/&gt;</code>!
         </h1>
 
-        <Form onSubmit={this.handleSubmit}>
+        <Form handleSubmit={this.handleSubmit}>
           <p>
             <TextInput name="firstName" placeholder="First Name" />{" "}
             <TextInput name="lastName" placeholder="Last Name" />

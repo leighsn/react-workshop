@@ -9,6 +9,7 @@ import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import $ from "jquery";
 import "bootstrap-webpack";
+import { truncate } from "fs";
 
 class Modal extends React.Component {
   static propTypes = {
@@ -16,12 +17,18 @@ class Modal extends React.Component {
     children: PropTypes.node
   };
 
-  open() {
-    $(this.node).modal("show");
+  doImperativeWork(){
+    const { isOpen } = this.props;
+    $(this.node).modal(this.props.isOpen ? 'show' : 'hide');
   }
 
-  close() {
-    $(this.node).modal("hide");
+  componentDidMount(){
+    this.doImperativeWork();
+
+  }
+
+  componentWillReceiveProps() {
+    this.doImperativeWork();
   }
 
   render() {
@@ -41,12 +48,17 @@ class Modal extends React.Component {
 }
 
 class App extends React.Component {
+
+  state = {
+    isOpen: true
+  }
+
   openModal = () => {
-    this.modal.open();
+    this.setState({ isOpen: true});
   };
 
   closeModal = () => {
-    this.modal.close();
+    this.setState({ isOpen: false });
   };
 
   render() {
@@ -60,7 +72,8 @@ class App extends React.Component {
 
         <Modal
           title="Declarative is better"
-          ref={modal => (this.modal = modal)}
+          isOpen={this.state}
+          closeModal={this.closeModal}
         >
           <p>Calling methods on instances is a FLOW not a STOCK!</p>
           <p>
@@ -72,7 +85,7 @@ class App extends React.Component {
             snapshots of state.
           </p>
           <button
-            onClick={this.closeModal}
+            onClick={this.props.closeModal}
             type="button"
             className="btn btn-default"
           >

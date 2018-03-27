@@ -46,6 +46,10 @@ module.exports = {
     publicPath: "/"
   },
 
+  node: {
+    fs: "empty"
+ },
+
   module: {
     loaders: [
       {

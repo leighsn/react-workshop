@@ -15,13 +15,56 @@ class Select extends React.Component {
     defaultValue: PropTypes.any
   };
 
+  state = {
+    showOptions: false
+  };
+
+  static contextTypes = {
+    handleSelect: PropTypes.func
+  };
+
+
+
+  static childContextTypes = {
+    handleSelect: PropTypes.func
+  }
+
+  getChildContext(){
+    return { handleSelect: this.handleSelect };
+  }
+
+  toggleOptions = () => {
+    debugger;
+    this.setState({ showOptions: !this.state.showOptions })
+  }
+
+  isControlled = () => {
+    return !!this.props.value;
+  }
+
+  handleSelect(val) {
+    this.setState({ selectValue: val})
+  }
+
+  renderChildren(){
+    if (!this.isControlled){
+      return this.props.children;
+    } else {
+      return React.Children.map(child => {
+        return React.cloneElement(child, {
+          onClick: () => this.handleSelect(child.props.value)
+        })
+      })
+    }
+  }
+
   render() {
     return (
-      <div className="select">
+      <div className="select" onClick={this.toggleOptions}>
         <div className="label">
           label <span className="arrow">▾</span>
         </div>
-        <div className="options">{this.props.children}</div>
+        {this.state.showOptions && <div className="options">{this.renderChildren()}</div>}
       </div>
     );
   }

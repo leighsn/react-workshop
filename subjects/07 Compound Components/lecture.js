@@ -3,88 +3,88 @@ import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import * as styles from "./styles";
 
-class Tabs extends React.Component {
-  state = {
-    activeIndex: 0
-  };
+// class Tabs extends React.Component {
+//   state = {
+//     activeIndex: 0
+//   };
 
-  selectTabIndex(activeIndex) {
-    this.setState({ activeIndex });
-  }
+//   selectTabIndex(activeIndex) {
+//     this.setState({ activeIndex });
+//   }
 
-  renderTabs() {
-    return this.props.data.map((tab, index) => {
-      const isActive = this.state.activeIndex === index;
-      return (
-        <div
-          key={tab.label}
-          style={isActive ? styles.activeTab : styles.tab}
-          onClick={() => this.selectTabIndex(index)}
-        >
-          {tab.label}
-        </div>
-      );
-    });
-  }
+//   renderTabs() {
+//     return this.props.data.map((tab, index) => {
+//       const isActive = this.state.activeIndex === index;
+//       return (
+//         <div
+//           key={tab.label}
+//           style={isActive ? styles.activeTab : styles.tab}
+//           onClick={() => this.selectTabIndex(index)}
+//         >
+//           {tab.label}
+//         </div>
+//       );
+//     });
+//   }
 
-  renderPanel() {
-    const tab = this.props.data[this.state.activeIndex];
-    return <div>{tab.description}</div>;
-  }
+//   renderPanel() {
+//     const tab = this.props.data[this.state.activeIndex];
+//     return <div>{tab.description}</div>;
+//   }
 
-  render() {
-    return (
-      <div>
-        <div style={styles.tabList}>{this.renderTabs()}</div>
-        <div style={styles.tabPanels}>{this.renderPanel()}</div>
-      </div>
-    );
-  }
-}
+//   render() {
+//     return (
+//       <div>
+//         <div style={styles.tabList}>{this.renderTabs()}</div>
+//         <div style={styles.tabPanels}>{this.renderPanel()}</div>
+//       </div>
+//     );
+//   }
+// }
 
-class App extends React.Component {
-  render() {
-    const tabData = [
-      {
-        label: "Tacos",
-        description: <p>Tacos are delicious</p>
-      },
-      {
-        label: "Burritos",
-        description: <p>Sometimes a burrito is what you really need</p>
-      },
-      {
-        label: "Coconut Korma",
-        description: <p>Might be your best option</p>
-      }
-    ];
+// class App extends React.Component {
+//   render() {
+//     const tabData = [
+//       {
+//         label: "Tacos",
+//         description: <p>Tacos are delicious</p>
+//       },
+//       {
+//         label: "Burritos",
+//         description: <p>Sometimes a burrito is what you really need</p>
+//       },
+//       {
+//         label: "Coconut Korma",
+//         description: <p>Might be your best option</p>
+//       }
+//     ];
 
-    return (
-      <div>
-        <Tabs data={tabData} />
-      </div>
-    );
-  }
-}
+//     return (
+//       <div>
+//         <Tabs data={tabData} />
+//       </div>
+//     );
+//   }
+// }
 
-ReactDOM.render(<App />, document.getElementById("app"));
+// ReactDOM.render(<App />, document.getElementById("app"));
 
 ////////////////////////////////////////////////////////////////////////////////
 // What if I wanted tabs on the bottom?
 
-//class Tabs extends React.Component {
+// class Tabs extends React.Component {
 //  static defaultProps = {
 //    tabsPlacement: 'top'
 //  }
-//
+
 //  state = {
 //    activeIndex: 0
 //  }
-//
+
 //  selectTabIndex(activeIndex) {
 //    this.setState({ activeIndex })
 //  }
-//
+
 //  renderTabs() {
 //    return this.props.data.map((tab, index) => {
 //      const isActive = this.state.activeIndex === index
@@ -97,7 +97,7 @@ ReactDOM.render(<App />, document.getElementById("app"));
 //      )
 //    })
 //  }
-//
+
 //  renderPanel() {
 //    const tab = this.props.data[this.state.activeIndex]
 //    return (
@@ -106,7 +106,7 @@ ReactDOM.render(<App />, document.getElementById("app"));
 //      </div>
 //    )
 //  }
-//
+
 //  render() {
 //    const tabs = (
 //      <div key="tabs" style={styles.tabList}>
@@ -127,9 +127,9 @@ ReactDOM.render(<App />, document.getElementById("app"));
 //      </div>
 //    )
 //  }
-//}
-//
-//class App extends React.Component {
+// }
+
+// class App extends React.Component {
 //  render() {
 //    const tabData = [
 //      { label: 'Tacos',
@@ -142,16 +142,16 @@ ReactDOM.render(<App />, document.getElementById("app"));
 //        description: <p>Might be your best option</p>
 //      }
 //    ]
-//
+
 //    return (
 //      <div>
 //        <Tabs data={tabData} tabsPlacement="bottom"/>
 //      </div>
 //    )
 //  }
-//}
-//
-//ReactDOM.render(<App/>, document.getElementById('app'))
+// }
+
+// ReactDOM.render(<App/>, document.getElementById('app'))
 
 ////////////////////////////////////////////////////////////////////////////////
 // That wasn't too bad, but it added a lot of complexity for something that
@@ -259,104 +259,104 @@ ReactDOM.render(<App />, document.getElementById("app"));
 // Feels weird ... whenever your options affect rendering, its a great
 // opportunity to create child components instead
 
-//class TabList extends React.Component {
-//  render() {
-//    const children = React.Children.map(this.props.children, (child, index) => {
-//      return React.cloneElement(child, {
-//        isActive: index === this.props.activeIndex,
-//        onClick: () => this.props.onActivate(index)
-//      })
-//    })
-//
-//    return <div style={styles.tabs}>{children}</div>
-//  }
-//}
-//
-//class Tab extends React.Component {
-//  render() {
-//    return (
-//      <div
-//        onClick={this.props.isDisabled ? null : this.props.onClick}
-//        style={this.props.isDisabled ? styles.disabledTab : (
-//          this.props.isActive ? styles.activeTab : styles.tab
-//        )}
-//      >
-//        {this.props.children}
-//      </div>
-//    )
-//  }
-//}
-//
-//class TabPanels extends React.Component {
-//  render() {
-//    return (
-//      <div style={styles.tabPanels}>
-//        {this.props.children[this.props.activeIndex]}
-//      </div>
-//    )
-//  }
-//}
-//
-//class TabPanel extends React.Component {
-//  render() {
-//    return <div>{this.props.children}</div>
-//  }
-//}
-//
-//class Tabs extends React.Component {
-//  state = {
-//    activeIndex: 0
-//  }
-//
-//  render() {
-//    const children = React.Children.map(this.props.children, (child, index) => {
-//      if (child.type === TabPanels) {
-//        return React.cloneElement(child, {
-//          activeIndex: this.state.activeIndex
-//        })
-//      } else if (child.type === TabList) {
-//        return React.cloneElement(child, {
-//          activeIndex: this.state.activeIndex,
-//          onActivate: (activeIndex) => this.setState({ activeIndex })
-//        })
-//      } else {
-//        return child
-//      }
-//    })
-//
-//    return <div>{children}</div>
-//  }
-//}
-//
-//class App extends React.Component {
-//  render() {
-//    return (
-//      <div>
-//        <Tabs>
-//          <TabList>
-//            <Tab>Tacos</Tab>
-//            <Tab isDisabled>Burritos</Tab>
-//            <Tab>Coconut Korma</Tab>
-//          </TabList>
-//
-//          <TabPanels>
-//            <TabPanel>
-//              <p>Tacos are delicious</p>
-//            </TabPanel>
-//            <TabPanel>
-//              <p>Sometimes a burrito is what you really need</p>
-//            </TabPanel>
-//            <TabPanel>
-//              <p>Might be your best option</p>
-//            </TabPanel>
-//          </TabPanels>
-//        </Tabs>
-//      </div>
-//    )
-//  }
-//}
-//
-//ReactDOM.render(<App/>, document.getElementById('app'))
+class TabList extends React.Component {
+ render() {
+   const children = React.Children.map(this.props.children, (child, index) => {
+     return React.cloneElement(child, {
+       isActive: index === this.props.activeIndex,
+       onClick: () => this.props.onActivate(index)
+     })
+   })
+
+   return <div style={styles.tabs}>{children}</div>
+ }
+}
+
+class Tab extends React.Component {
+ render() {
+   return (
+     <div
+       onClick={this.props.isDisabled ? null : this.props.onClick}
+       style={this.props.isDisabled ? styles.disabledTab : (
+         this.props.isActive ? styles.activeTab : styles.tab
+       )}
+     >
+       {this.props.children}
+     </div>
+   )
+ }
+}
+
+class TabPanels extends React.Component {
+ render() {
+   return (
+     <div style={styles.tabPanels}>
+       {this.props.children[this.props.activeIndex]}
+     </div>
+   )
+ }
+}
+
+class TabPanel extends React.Component {
+ render() {
+   return <div>{this.props.children}</div>
+ }
+}
+
+class Tabs extends React.Component {
+ state = {
+   activeIndex: 0
+ }
+
+ render() {
+   const children = React.Children.map(this.props.children, (child, index) => {
+     if (child.type === TabPanels) {
+       return React.cloneElement(child, {
+         activeIndex: this.state.activeIndex
+       })
+     } else if (child.type === TabList) {
+       return React.cloneElement(child, {
+         activeIndex: this.state.activeIndex,
+         onActivate: (activeIndex) => this.setState({ activeIndex })
+       })
+     } else {
+       return child
+     }
+   })
+
+   return <div>{children}</div>
+ }
+}
+
+class App extends React.Component {
+ render() {
+   return (
+     <div>
+       <Tabs>
+         <TabList>
+           <Tab>Tacos</Tab>
+           <Tab isDisabled>Burritos</Tab>
+           <Tab>Coconut Korma</Tab>
+         </TabList>
+
+         <TabPanels>
+           <TabPanel>
+             <p>Tacos are delicious</p>
+           </TabPanel>
+           <TabPanel>
+             <p>Sometimes a burrito is what you really need</p>
+           </TabPanel>
+           <TabPanel>
+             <p>Might be your best option</p>
+           </TabPanel>
+         </TabPanels>
+       </Tabs>
+     </div>
+   )
+ }
+}
+
+ReactDOM.render(<App/>, document.getElementById('app'))
 
 ////////////////////////////////////////////////////////////////////////////////
 // Now this is really flexible
