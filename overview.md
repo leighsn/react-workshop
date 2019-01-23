@@ -10,7 +10,7 @@
 - Example of imperative code: [jQuery date picker] (http://api.jqueryui.com/datepicker/). 
 - Instead, encapsulate logic into child components that can be assembled to fit the use case.
 
-Example: Theramin Music Player
+Example: Theremin Music Player
 - Original component - logic around playing the sound closely coupled to the <App/> component. Not re-usable. Four places in the code where our component interacts with the oscillator component.
 - Step 2: Interact with the oscillator component in two places - on mount, and in the function that handles all the imperative code. Otherwise, our component runs imperative work whenever it updates. Start to seperate logic of oscilaltor from the component.
 - Step 3: Encapsulate the interaction with oscillator to a <Tone/> component
@@ -19,7 +19,23 @@ Example: Theramin Music Player
 
 ## Compound Components
 - De-couple component structure from functionality so that other developers can re-organize them as they need to for their specific use case.
-- {this.props.children} - use when you don't want to control behavior of the children from the parent component. If you do want to have control over child render logic based on state of the parent, use React.Component.children helpers:
+- {this.props.children} - use when you don't want to control behavior of the children from the parent component. If you do want to have control over child render logic based on state of the parent, use React.Component helpers:
+
+<Component>
+    <AnotherComponent/>
+    <AnotherComponent/>
+    <AnotherComponent/>
+</Component>
+
+class Component {
+  render(){
+    <div>
+    <p>
+    </p>
+    {this.props.children}
+    </div>
+  }
+}
 
 ```
 React.Children.map(this.props.children, child => {
@@ -90,13 +106,22 @@ Descendant.contextTypes = {
 
 
 ## Higher-order components
-- Common pattern for encapsulating logic that you want to use repeatedly. Replacement for mixins, which were popular before ES 6
-- HOC is just a component that wraps another component, in order to bake in additional logic or modify props. 
-- Downsides - common to have components wrapped in 5 or more levels of compound components.
-- Also, common pattern is to create an anonymous class wrappey, which seems excessive. Useful pattern but can be over-utilized. 
+- Common pattern for encapsulating logic that you want to use repeatedly. Replacement for mixins, which were popular before ES 6.
+- HOC is just a component that wraps another component, in order to bake in additional logic or modify props. HOC takes the child component as an argument, and renders it, with some additional information that it passes in as props.
+- Common for the parent component to own logic (and pass its state down to child), while child component owns what gets rendered on the page.
+- Example - https://cdb.reacttraining.com/use-a-render-prop-50de598f11ce
 
-## Render Props
-- Alternative pattern for encapsulating logic that you want to pass to children. More flexible than HOC.
+- Downsides - often overutilized. Common to have components wrapped in 5 or more levels of compound components. Since you're creating a new class at each level of nesting, it seems excessive.
+- Also static composition - all child components need to expect the same prop key in order to use the logic passed in by the wrapper.
+
+
+## Render Props aka the new Hotness
+- Alternative pattern for encapsulating logic that you want to pass to children. More flexible than HOC. Michael Jackson loves this pattern.
+- Render prop is a function prop that tells the component what to render. See example.
+- Gives control over both the props AND what gets rendered! So this means your child components don't need to expect the same props (like they do with HOC)
+
 
 ## Render Optimizations
-- React.PureComponent -> use when you don't need state on your component. More efficient than a simple functional component because they always re-render when they are part of the tree that re-renders. React.PureComponent is similar to a React.Component with a built in shouldComponentUpdate method that compares props. C
+- React.PureComponent is similar to a React.Component with a built in shouldComponentUpdate method that does a shallow compare of props.  Good replacement for pure functional components that automatically get run whenever a parent re-renders. Use with caution because any children of PureComponent won't re-render unless the PureComponent shallow compare of props and state changes returns true.
+- Also, think creatively about what needs to be rendered on screen. Example - if you have a list with thousands of elements, only 20-ish might be visible. If you write components that have knowledge about what's on screen and only render those, app will be very fast.
+

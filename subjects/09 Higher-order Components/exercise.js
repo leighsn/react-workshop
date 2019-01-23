@@ -98,6 +98,6 @@ class App extends React.Component {
 
 const AppWithMouse = withMouse(withCat(App), { mouse: { x: 5, y: 10 } });
 
-
+function acceptsComponent(Component)
 
 ReactDOM.render(<AppWithMouse/>, document.getElementById("app"));
